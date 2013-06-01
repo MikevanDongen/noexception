@@ -29,7 +29,9 @@ int main()
         printf("1 finally!\n");
     }
     ETRY;
-
+    
+    printf("\n");
+    
     TRY
     {
         printf("1 trying..\n");
@@ -52,7 +54,7 @@ void tc_sub1()
     {
         printf("2   trying..\n");
         tc_sub2();
-        THROW(ALPHA_EXCEPTION);
+        printf("2   more trying..\n");
     }
     CATCH(ALPHA_EXCEPTION)
     {
@@ -61,6 +63,7 @@ void tc_sub1()
     CATCHALL
     {
         printf("2   gotta catch(%d) em all!\n", EXCEPTION);
+        THROW(ALPHA_EXCEPTION);
     }
     FINALLY
     {
@@ -75,6 +78,7 @@ void tc_sub2()
     {
         printf("3     trying..\n");
         THROW(CHARLIE_EXCEPTION);
+        printf("3     won't reach this!\n");
     }
     CATCH(BETA_EXCEPTION)
     {

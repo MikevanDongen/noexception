@@ -41,17 +41,17 @@
  * the application will be exited with code `EXIT_FAILURE'.
  */
 
-jmp_buf * try_jmpr_new();
-void try_jmpr_prev();
-void try_jmpr_remove_top();
+jmp_buf * try_jmpr_new(void);
+void try_jmpr_prev(int value);
+void try_jmpr_remove_top(void);
 
 
-#define TRY do{ jmp_buf * ex_buf__ = try_jmpr_new(); int value__ = setjmp(*ex_buf__); switch(value__){ case 0: { while(1){
-#define CATCH(x) break; case x: value__ = 0;
-#define CATCHALL break; default: goto catchall__; } } } catchall__: switch(value__ == 0) { case 0: { int EXCEPTION = value__; value__ = 0; while(1) {
+#define TRY do{ int EXCEPTION = 0; int value__ = setjmp(*try_jmpr_new()); switch(value__){ case 0: while(1){
+#define CATCH(x) break; case x: if(EXCEPTION) break; EXCEPTION = value__; value__ = 0;
+#define CATCHALL break; default: goto catchall__; } } catchall__: switch(value__ == 0 || EXCEPTION) { case 0: EXCEPTION = value__; value__ = 0; while(1) {
 #define FINALLY break; } default: while(1){
-#define ETRY break; } } } try_jmpr_remove_top(); if(value__){ try_jmpr_prev(value__); fprintf(stderr, "EXCEPTION (%d) NOT CAUGHT!\n", value__); exit(EXIT_FAILURE); } }while(0)
-#define THROW(x) longjmp(*ex_buf__, x)
+#define ETRY break; } } try_jmpr_remove_top(); if(value__){ try_jmpr_prev(value__); fprintf(stderr, "EXCEPTION (%d) NOT CAUGHT!\n", value__); exit(EXIT_FAILURE); } }while(0)
+#define THROW(x) try_jmpr_prev(x)
 
 
 #endif /*!_TRY_THROW_CATCH_H_*/
