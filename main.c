@@ -40,9 +40,24 @@ int main()
     CATCH(CHARLIE_EXCEPTION)
     {
         printf("1 catching CHARLIE_EXCEPTION..\n");
+        TRY
+        {
+            printf("2   trying..\n");
+            THROW(CHARLIE_EXCEPTION);
+        }
+        CATCHALL
+        {
+            printf("2   gotta catch(%d) em all!\n", EXCEPTION);
+        }
+        ETRY;
+    }
+    FINALLY
+    {
+        printf("1 finally!\n");
     }
     ETRY;
 
+    printf("\n");
     printf("main continues, so all exceptions (if any) were caught!\n");
     
     return 0;

@@ -48,7 +48,7 @@ void try_jmpr_remove_top(void);
 
 #define TRY do{ int EXCEPTION = 0; int value__ = setjmp(*try_jmpr_new()); switch(value__){ case 0: while(1){
 #define CATCH(x) break; case x: if(EXCEPTION) break; EXCEPTION = value__; value__ = 0;
-#define CATCHALL break; default: goto catchall__; } } catchall__: switch(value__ == 0 || EXCEPTION) { case 0: EXCEPTION = value__; value__ = 0; while(1) {
+#define CATCHALL break; default: break; } } switch(value__ == 0 || EXCEPTION) { case 0: EXCEPTION = value__; value__ = 0; while(1) {
 #define FINALLY break; } default: while(1){
 #define ETRY break; } } try_jmpr_remove_top(); if(value__){ try_jmpr_prev(value__); fprintf(stderr, "EXCEPTION (%d) NOT CAUGHT!\n", value__); exit(EXIT_FAILURE); } }while(0)
 #define THROW(x) try_jmpr_prev(x)

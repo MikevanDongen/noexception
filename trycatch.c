@@ -12,8 +12,9 @@ jmp_buf * try_jmpr_new()
     }
     else if(n == max)
     {
+        jmp_buf * new_jumpers;
         max <<= 1;
-        jmp_buf * new_jumpers = realloc(jumpers, sizeof(jmp_buf) * max);
+        new_jumpers = realloc(jumpers, sizeof(jmp_buf) * max);
         if(!new_jumpers)
             return NULL;
         jumpers = new_jumpers;
