@@ -24,7 +24,6 @@
 #define _TRY_THROW_CATCH_H_
 
 #include <setjmp.h>
-#include <stdlib.h>
 
 /* With the original version, by Francesco Nidito, it's possible to create a
  * try/catch/finally block. Though his version has some limitations:
@@ -35,23 +34,38 @@
  * http://www.di.unipi.it/~nids/docs/longjump_try_trow_catch.html
  *
  * In this version, by Mike van Dongen, improvements were made to the original code:
- * The `finally' block is optional; An optional catch-all block was implemented;
- * Uncaught exceptions will be thrown to the calling function; If an exception
- * does not get caught, an error message will be printed to the stderr stream and
- * the application will be exited with code `EXIT_FAILURE'.
+ * Exceptions consist of a type and a message; The `finally' block is optional;
+ * An optional catch-all block was implemented; Uncaught exceptions will be thrown
+ * to the calling function; If an exception does not get caught, an error message
+ * will be printed to the stderr stream and the executable will exit with code `EXIT_FAILURE'.
  */
 
-jmp_buf * try_jmpr_new(void);
-void try_jmpr_prev(int value);
-void try_jmpr_remove_top(void);
+typedef struct trycatch_exception_struct* EXCEPTION;
+struct trycatch_exception_struct
+{
+    int type;
+    char* msg;
+    EXCEPTION previous;
+};
 
 
-#define TRY do{ int EXCEPTION = 0; int value__ = setjmp(*try_jmpr_new()); switch(value__){ case 0: while(1){
-#define CATCH(x) break; case x: if(EXCEPTION) break; EXCEPTION = value__; value__ = 0;
-#define CATCHALL break; default: break; } } switch(value__ == 0 || EXCEPTION) { case 0: EXCEPTION = value__; value__ = 0; while(1) {
+jmp_buf * trycatch_jumper_new(void);
+void trycatch_jumper_free(void);
+void trycatch_jumper_free_if_empty(void);
+void trycatch_jumper_previous(int value);
+void trycatch_jumper_remove_top(void);
+
+int trycatch_exception_new(int type, char* msg);
+void trycatch_exception_list_clean(void);
+EXCEPTION trycatch_exception_get(int index);
+
+
+#define TRY do{ EXCEPTION e = NULL, new_e; int value__ = setjmp(*trycatch_jumper_new()), e_type = 0; if(value__){ new_e = trycatch_exception_get(value__ - 1); e_type = new_e->type; } switch(e_type){ case 0: while(1){
+#define CATCH(x) break; case x: if(e) break; e = new_e; e_type = 0;
+#define CATCHALL break; default: break; } } switch(e_type == 0 || e) { case 0: e = new_e; e_type = 0; while(1) {
 #define FINALLY break; } default: while(1){
-#define ETRY break; } } try_jmpr_remove_top(); if(value__){ try_jmpr_prev(value__); fprintf(stderr, "EXCEPTION (%d) NOT CAUGHT!\n", value__); exit(EXIT_FAILURE); } }while(0)
-#define THROW(x) try_jmpr_prev(x)
+#define ETRY break; } } trycatch_jumper_remove_top(); if(e_type) trycatch_jumper_previous(value__); trycatch_jumper_free_if_empty(); trycatch_exception_list_clean(); }while(0)
+#define THROW(type, msg) trycatch_jumper_previous(trycatch_exception_new(type, msg))
 
 
 #endif /*!_TRY_THROW_CATCH_H_*/

@@ -13,20 +13,20 @@ int main()
 {
     TRY
     {
-        printf("1 trying..\n");
+        printf("trying..\n");
         tc_sub1();
     }
     CATCH(ALPHA_EXCEPTION)
     {
-        printf("1 catching ALPHA_EXCEPTION..\n");
+        printf("catching ALPHA_EXCEPTION: %s (%s)\n", e->msg, e->previous ? e->previous->msg : "no rethrow");
     }
     CATCH(BETA_EXCEPTION)
     {
-        printf("1 catching BETA_EXCEPTION..\n");
+        printf("catching BETA_EXCEPTION..\n");
     }
     FINALLY
     {
-        printf("1 finally!\n");
+        printf("cleaning up!\n");
     }
     ETRY;
     
@@ -34,26 +34,26 @@ int main()
     
     TRY
     {
-        printf("1 trying..\n");
+        printf("trying..\n");
         tc_sub2();
     }
     CATCH(CHARLIE_EXCEPTION)
     {
-        printf("1 catching CHARLIE_EXCEPTION..\n");
+        printf("catching CHARLIE_EXCEPTION: %s\n", e->msg);
         TRY
         {
-            printf("2   trying..\n");
-            THROW(CHARLIE_EXCEPTION);
+            printf("trying something else..\n");
+            THROW(CHARLIE_EXCEPTION, "something went bad with Charlie!");
         }
         CATCHALL
         {
-            printf("2   gotta catch(%d) em all!\n", EXCEPTION);
+            printf("gotta catch(%d) em all: %s (%s)\n", e->type, e->msg, e->previous->msg);
         }
         ETRY;
     }
     FINALLY
     {
-        printf("1 finally!\n");
+        printf("cleaning up!\n");
     }
     ETRY;
 
@@ -67,22 +67,22 @@ void tc_sub1()
 {
     TRY
     {
-        printf("2   trying..\n");
+        printf("trying..\n");
         tc_sub2();
-        printf("2   more trying..\n");
+        printf("more trying..\n");
     }
     CATCH(ALPHA_EXCEPTION)
     {
-        printf("2   catching ALPHA_EXCEPTION..\n");
+        printf("catching ALPHA_EXCEPTION: %s\n", e->msg);
     }
     CATCHALL
     {
-        printf("2   gotta catch(%d) em all!\n", EXCEPTION);
-        THROW(ALPHA_EXCEPTION);
+        printf("gotta catch(%d) em all: %s\n", e->type, e->msg);
+        THROW(ALPHA_EXCEPTION, "the Alpha team is here!");
     }
     FINALLY
     {
-        printf("2   finally!\n");
+        printf("cleaning up!\n");
     }
     ETRY;
 }
@@ -91,17 +91,17 @@ void tc_sub2()
 {
     TRY
     {
-        printf("3     trying..\n");
-        THROW(CHARLIE_EXCEPTION);
-        printf("3     won't reach this!\n");
+        printf("trying..\n");
+        THROW(CHARLIE_EXCEPTION, "Charlie is down!");
+        printf("won't reach this!\n");
     }
     CATCH(BETA_EXCEPTION)
     {
-        printf("3     catching BETA_EXCEPTION..\n");
+        printf("catching BETA_EXCEPTION: %s\n", e->msg);
     }
     FINALLY
     {
-        printf("3     finally!\n");
+        printf("cleaning up!\n");
     }
     ETRY;
 }
