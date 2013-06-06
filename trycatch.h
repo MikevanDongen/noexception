@@ -50,22 +50,22 @@ struct trycatch_exception_struct
 
 
 jmp_buf * trycatch_jumper_new(void);
-void trycatch_jumper_free(void);
 void trycatch_jumper_free_if_empty(void);
-void trycatch_jumper_previous(int value);
+void trycatch_jumper_previous(void);
 void trycatch_jumper_remove_top(void);
 
-int trycatch_exception_new(int type, char* msg);
-void trycatch_exception_list_clean(void);
-EXCEPTION trycatch_exception_get(int index);
+void trycatch_exception_new(int type, char* msg, EXCEPTION previous);
+void trycatch_exception_free_if_empty(void);
+void trycatch_exception_remove_top_and_previous(void);
+EXCEPTION trycatch_exception_get(void);
 
 
-#define TRY do{ EXCEPTION e = NULL, new_e; int value__ = setjmp(*trycatch_jumper_new()), e_type = 0; if(value__){ new_e = trycatch_exception_get(value__ - 1); e_type = new_e->type; } switch(e_type){ case 0: while(1){
+#define TRY do{ EXCEPTION e = NULL, new_e; int value__ = setjmp(*trycatch_jumper_new()), e_type = 0; if(value__){ new_e = trycatch_exception_get(); e_type = new_e->type; } switch(e_type){ case 0: while(1){
 #define CATCH(x) break; case x: if(e) break; e = new_e; e_type = 0;
 #define CATCHALL break; default: break; } } switch(e_type == 0 || e) { case 0: e = new_e; e_type = 0; while(1) {
 #define FINALLY break; } default: while(1){
-#define ETRY break; } } trycatch_jumper_remove_top(); if(e_type) trycatch_jumper_previous(value__); trycatch_jumper_free_if_empty(); trycatch_exception_list_clean(); }while(0)
-#define THROW(type, msg) trycatch_jumper_previous(trycatch_exception_new(type, msg))
+#define ETRY break; } } trycatch_jumper_remove_top(); if(e_type) trycatch_jumper_previous(); trycatch_jumper_free_if_empty(); if(e) trycatch_exception_remove_top_and_previous(); trycatch_exception_free_if_empty(); }while(0)
+#define THROW(type, msg) trycatch_exception_new(type, msg, e); trycatch_jumper_previous()
 
 
 #endif /*!_TRY_THROW_CATCH_H_*/

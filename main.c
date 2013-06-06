@@ -14,6 +14,39 @@ int main()
     TRY
     {
         printf("trying..\n");
+        THROW(BETA_EXCEPTION, "B!");
+    }
+    CATCH(BETA_EXCEPTION)
+    {
+        printf("catching BETA_EXCEPTION: %s\n", e->msg);
+        TRY
+        {
+            printf("trying..\n");
+            THROW(CHARLIE_EXCEPTION, "C!");
+            printf("won't reach this!\n");
+        }
+        CATCH(CHARLIE_EXCEPTION)
+        {
+            printf("catching C_EXCEPTION: %s\n", e->msg);
+        }
+        FINALLY
+        {
+            printf("finally\n");
+        }
+        ETRY;
+        printf("reach this!\n");
+    }
+    FINALLY
+    {
+        printf("cleaning up!\n");
+    }
+    ETRY;
+    
+    printf("\n");
+    
+    TRY
+    {
+        printf("trying..\n");
         tc_sub1();
     }
     CATCH(ALPHA_EXCEPTION)
@@ -47,16 +80,17 @@ int main()
         }
         CATCHALL
         {
-            printf("gotta catch(%d) em all: %s (%s)\n", e->type, e->msg, e->previous->msg);
+            printf("gotta catch(%d) em all: %s (%s)\n", e->type, e->msg, e->previous ? e->previous->msg : "no rethrow");
         }
         ETRY;
+        printf("same catching CHARLIE_EXCEPTION: %s\n", e->msg);
     }
     FINALLY
     {
         printf("cleaning up!\n");
     }
     ETRY;
-
+    
     printf("\n");
     printf("main continues, so all exceptions (if any) were caught!\n");
     
