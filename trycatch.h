@@ -61,7 +61,7 @@ void trycatch_exception_throw(int type, char* msg, EXCEPTION previous);
 EXCEPTION trycatch_exception_get(void);
 
 
-#define TRY do{ EXCEPTION e = NULL, new_e; int value__ = setjmp(*trycatch_jumper_new()); unsigned int e_type = 0; if(value__){ new_e = trycatch_exception_get(); e_type = new_e->type; } switch(e_type){ case 0: while(1){
+#define TRY do{ EXCEPTION e = ((void*) 0), new_e; int value__ = setjmp(*trycatch_jumper_new()); unsigned int e_type = 0; if(value__){ new_e = trycatch_exception_get(); e_type = new_e->type; } switch(e_type){ case 0: while(1){
 #define CATCH(x) break; case x: if(e) break; e = new_e; e_type = 0;
 #define CATCHALL break; default: break; } } switch(e_type == 0 || e) { case 0: e = new_e; e_type = 0; while(1) {
 #define FINALLY break; } default: while(1){
