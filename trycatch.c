@@ -14,8 +14,8 @@ struct trycatch_stack
 {
     void* list;
     size_t item_size;
-    int max;
-    int n;
+    unsigned int max;
+    unsigned int n;
 };
 
 typedef struct trycatch_stack* TRYCATCH_STACK;
@@ -157,6 +157,27 @@ void trycatch_exception_remove_top_and_previous(void)
         current = current->previous;
         trycatch_stack_pop(trycatch_exception_stack);
     }
+}
+
+void trycatch_end(int exception_not_caught, EXCEPTION caught_exception)
+{
+    trycatch_jumper_remove_top();
+    
+    if(exception_not_caught)
+        trycatch_jumper_previous();
+    
+    trycatch_jumper_free_if_empty();
+    
+    if(caught_exception)
+        trycatch_exception_remove_top_and_previous();
+    
+    trycatch_exception_free_if_empty();
+}
+
+void trycatch_exception_throw(int type, char* msg, EXCEPTION previous)
+{
+    trycatch_exception_new(type, msg, previous);
+    trycatch_jumper_previous();
 }
 
 EXCEPTION trycatch_exception_get(void)
