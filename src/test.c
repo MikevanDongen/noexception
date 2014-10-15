@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "trycatch.h"
+#include "noexception.h"
 
 #define ALPHA_EXCEPTION 1
 #define BETA_EXCEPTION 2

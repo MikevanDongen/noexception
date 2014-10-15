@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "trycatch.h"
+#include "noexception.h"
 
 void trycatch_exception_not_caught(void);
 
