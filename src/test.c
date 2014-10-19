@@ -15,11 +15,11 @@
 #define BETA_EXCEPTION 2
 #define CHARLIE_EXCEPTION 3
 
+const EXCEPTION e = NULL;
+
 START_TEST2(test_throw)
 {
-/*
     THROW(ALPHA_EXCEPTION, "Throwing an Alpha Exception!");
-*/
 }
 END_TEST
 
@@ -336,7 +336,6 @@ Suite * regression_test_suite(void)
     return s;
 }
 
-
 int main(void)
 {
     int number_failed;
@@ -349,7 +348,7 @@ int main(void)
     srunner_run_all(sr, CK_VERBOSE);
     number_failed = srunner_ntests_failed(sr);
     srunner_free(sr);
-    return (number_failed == 0) ? 0 : 1;
+    return number_failed != 0;
 }
 
 
