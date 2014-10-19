@@ -4,8 +4,8 @@
 
 #include "noexception.h"
 
-
-#define START_TEST2(...) START_TEST(__VA_ARGS__) unsigned int assert_in_order_counter = 0;
+#define START_TEST2(name) START_TEST(name) { unsigned int assert_in_order_counter = 0;
+#define END_TEST2 } END_TEST
 
 #define assert_in_order(n) (assert_in_order_counter++ == n) ? \
     mark_point() : \
@@ -21,7 +21,7 @@ START_TEST2(test_throw)
 {
     THROW(ALPHA_EXCEPTION, "Throwing an Alpha Exception!");
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try)
 {
@@ -33,7 +33,7 @@ START_TEST2(test_try)
     ETRY;
     assert_in_order(2);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_catch)
 {
@@ -48,7 +48,7 @@ START_TEST2(test_try_catch)
     ETRY;
     assert_in_order(2);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_catch_catch)
 {
@@ -66,7 +66,7 @@ START_TEST2(test_try_catch_catch)
     ETRY;
     assert_in_order(2);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_finally)
 {
@@ -82,7 +82,7 @@ START_TEST2(test_try_finally)
     ETRY;
     assert_in_order(3);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_catch_finally)
 {
@@ -101,7 +101,7 @@ START_TEST2(test_try_catch_finally)
     ETRY;
     assert_in_order(3);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_catch_catch_finally)
 {
@@ -123,7 +123,7 @@ START_TEST2(test_try_catch_catch_finally)
     ETRY;
     assert_in_order(3);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_catchall)
 {
@@ -138,7 +138,7 @@ START_TEST2(test_try_catchall)
     ETRY;
     assert_in_order(2);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_throw_catch)
 {
@@ -155,7 +155,7 @@ START_TEST2(test_try_throw_catch)
     ETRY;
     assert_in_order(3);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_throw_catch_catch)
 {
@@ -175,7 +175,7 @@ START_TEST2(test_try_throw_catch_catch)
     ETRY;
     assert_in_order(3);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_throw_catch_finally)
 {
@@ -196,7 +196,7 @@ START_TEST2(test_try_throw_catch_finally)
     ETRY;
     assert_in_order(4);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_throw_catch_catch_finally)
 {
@@ -220,7 +220,7 @@ START_TEST2(test_try_throw_catch_catch_finally)
     ETRY;
     assert_in_order(4);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_throw_catchall)
 {
@@ -237,7 +237,7 @@ START_TEST2(test_try_throw_catchall)
     ETRY;
     assert_in_order(3);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_throw_catchall_finally)
 {
@@ -258,7 +258,7 @@ START_TEST2(test_try_throw_catchall_finally)
     ETRY;
     assert_in_order(4);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_throw_catch_catchall)
 {
@@ -278,7 +278,7 @@ START_TEST2(test_try_throw_catch_catchall)
     ETRY;
     assert_in_order(3);
 }
-END_TEST
+END_TEST2
 
 START_TEST2(test_try_throw_catchall_catch)
 {
@@ -298,7 +298,7 @@ START_TEST2(test_try_throw_catchall_catch)
     ETRY;
     assert_in_order(3);
 }
-END_TEST
+END_TEST2
 
 /*
 Try [throw] [catch | catchall]* [throw] [finally]
@@ -393,7 +393,7 @@ int main_2()
     TRY
     {
         printf("trying..\n");
-//        tc_sub1();
+        /*tc_sub1();*/
     }
     CATCH(ALPHA_EXCEPTION)
     {
@@ -414,7 +414,7 @@ int main_2()
     TRY
     {
         printf("trying..\n");
-//        tc_sub2();
+        /*tc_sub2();*/
     }
     CATCH(CHARLIE_EXCEPTION)
     {
