@@ -62,7 +62,7 @@ void* trycatch_stack_push(TRYCATCH_STACK stack, const void* item)
 
 void* trycatch_stack_peek(TRYCATCH_STACK stack)
 {
-    if(stack->n)
+    if(stack && stack->n)
         return (unsigned char*) stack->list + (stack->item_size * (stack->n - 1));
     
     return NULL;
@@ -96,8 +96,11 @@ jmp_buf * trycatch_jumper_new(void)
 
 void trycatch_jumper_free(void)
 {
-    trycatch_stack_destroy(trycatch_jumper_stack);
-    trycatch_jumper_stack = NULL;
+    if(trycatch_jumper_stack)
+    {
+        trycatch_stack_destroy(trycatch_jumper_stack);
+        trycatch_jumper_stack = NULL;
+    }
 }
 
 void trycatch_jumper_free_if_empty(void)
