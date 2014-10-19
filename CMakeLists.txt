@@ -13,4 +13,4 @@ include_directories("include/")
 
 add_library(noexception SHARED "src/noexception.c")
 add_executable(noexception_test src/test.c)
-target_link_libraries(noexception_test noexception)
+target_link_libraries(noexception_test noexception check)

@@ -46,22 +46,22 @@
  *  valgrind --leak-check=full --show-reachable=yes ./trycatch
  */
 
-typedef struct trycatch_exception_struct* EXCEPTION;
+typedef struct trycatch_exception_struct *EXCEPTION;
 struct trycatch_exception_struct
 {
     unsigned int type;
-    char* msg;
+    const char *msg;
     EXCEPTION previous;
 };
 
 
 jmp_buf * trycatch_jumper_new(void);
 void trycatch_end(int exception_not_caught, EXCEPTION caught_exception);
-void trycatch_exception_throw(int type, char* msg, EXCEPTION previous);
+void trycatch_exception_throw(unsigned int type, const char *msg, EXCEPTION previous);
 EXCEPTION trycatch_exception_get(void);
 
 
-#define TRY do{ EXCEPTION e = ((void*) 0), new_e; int value__ = setjmp(*trycatch_jumper_new()); unsigned int e_type = 0; if(value__){ new_e = trycatch_exception_get(); e_type = new_e->type; } switch(e_type){ case 0: while(1){
+#define TRY do{ EXCEPTION e = ((void *) 0), new_e; int value__ = setjmp(*trycatch_jumper_new()); unsigned int e_type = 0; if(value__){ new_e = trycatch_exception_get(); e_type = new_e->type; } switch(e_type){ case 0: while(1){
 #define CATCH(x) break; case x: if(e) break; e = new_e; e_type = 0;
 #define CATCHALL break; default: break; } } switch(e_type == 0 || e) { case 0: e = new_e; e_type = 0; while(1) {
 #define FINALLY break; } default: while(1){

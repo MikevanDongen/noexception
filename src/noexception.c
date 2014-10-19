@@ -124,7 +124,7 @@ void trycatch_jumper_remove_top(void)
 
 TRYCATCH_STACK trycatch_exception_stack = NULL;
 
-void trycatch_exception_new(int type, char* msg, EXCEPTION previous)
+void trycatch_exception_new(unsigned int type, const char *msg, const EXCEPTION previous)
 {
     EXCEPTION e;
     
@@ -174,7 +174,7 @@ void trycatch_end(int exception_not_caught, EXCEPTION caught_exception)
     trycatch_exception_free_if_empty();
 }
 
-void trycatch_exception_throw(int type, char* msg, EXCEPTION previous)
+void trycatch_exception_throw(unsigned int type, const char *msg, EXCEPTION previous)
 {
     trycatch_exception_new(type, msg, previous);
     trycatch_jumper_previous();
